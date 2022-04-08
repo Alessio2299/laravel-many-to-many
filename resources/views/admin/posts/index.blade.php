@@ -29,7 +29,7 @@
                         @endif   
                         <td>     
                             @foreach ($post->tags as $tag)
-                                <span class="badge badge-primary">{{$tag->name}}</span>
+                                <a href="{{route('admin.tags.show', $tag->id)}}"><span class="badge badge-primary">{{$tag->name}}</span></a> 
                             @endforeach     
                         </td>                      
                         <td class="d-flex">

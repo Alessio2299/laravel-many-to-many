@@ -8,6 +8,8 @@ use App\Post;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+
 
 class PostController extends Controller
 {
@@ -48,7 +50,7 @@ class PostController extends Controller
             'url' => 'nullable|url',
             'description' => 'nullable|min:5',
             'category_id' => 'exists:categories,id',
-            'tags' => 'exists:tags,id'
+            'tags' => 'nullable|exists:tags,id'
         ]);
 
         $data = $request->all();
@@ -62,9 +64,9 @@ class PostController extends Controller
         $data['slug'] = $slug;
         $post->fill($data);
         $post->save();
-
-        $post->tags()->sync($data['tags']);
-
+        if(Arr::exists($data, 'tags')){
+            $post->tags()->sync($data['tags']);
+        }
         return redirect()->route('admin.posts.index');
     }
 
@@ -106,7 +108,7 @@ class PostController extends Controller
             'url' => 'nullable|url',
             'description' => 'nullable|min:5',
             'category_id' => 'nullable|exists:categories,id',
-            'tags' => 'exists:tags,id'
+            'tags' => 'nullable|exists:tags,id'
         ]);
         $data = $request->all();
 
@@ -126,8 +128,10 @@ class PostController extends Controller
         
         $post->update($data);
         $post->save();
-        
-        $post->tags()->sync($data['tags']);
+
+        if(Arr::exists($data, 'tags')){
+            $post->tags()->sync($data['tags']);
+        }
 
         return redirect()->route('admin.posts.show', $post->id);
     }

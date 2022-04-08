@@ -77,6 +77,11 @@
                                         Posts
                                     </a>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" href="{{route('admin.tags.index')}}">
+                                        Tags
+                                    </a>
+                                </li>
                             @endguest
                         </ul>
                     </div>
