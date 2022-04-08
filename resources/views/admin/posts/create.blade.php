@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title','Create Post')
 @section('content')
     <div class="container">
       <h1>Create Post</h1>
