@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Category;
 use App\Http\Controllers\Controller;
 use App\Post;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -18,6 +19,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
+        
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -29,7 +31,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('categories','tags'));
     }
 
     /**
@@ -44,8 +47,10 @@ class PostController extends Controller
             'title' => 'required|min:1',
             'url' => 'nullable|url',
             'description' => 'nullable|min:5',
-            'category_id' => 'exists:categories,id'
+            'category_id' => 'exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
+
         $data = $request->all();
         $slug = Str::slug($data['title']);
         $counter = 1;
@@ -57,6 +62,9 @@ class PostController extends Controller
         $data['slug'] = $slug;
         $post->fill($data);
         $post->save();
+
+        $post->tags()->sync($data['tags']);
+
         return redirect()->route('admin.posts.index');
     }
 
@@ -80,7 +88,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -96,7 +105,8 @@ class PostController extends Controller
             'title' => 'required|min:1',
             'url' => 'nullable|url',
             'description' => 'nullable|min:5',
-            'category_id' => 'nullable|exists:categories,id'
+            'category_id' => 'nullable|exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
         $data = $request->all();
 
@@ -116,6 +126,8 @@ class PostController extends Controller
         
         $post->update($data);
         $post->save();
+        
+        $post->tags()->sync($data['tags']);
 
         return redirect()->route('admin.posts.show', $post->id);
     }

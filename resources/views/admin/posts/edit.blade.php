@@ -27,7 +27,22 @@
           <label for="description">Description</label>
           <textarea type="text" class="form-control" name="description" placeholder="Add Description" rows="6">{{old('title', $post->description)}}</textarea>
         </div>
-        <button class="btn btn-success" type="submit">Edit</button>
+        @foreach ($tags as $tag)
+          @if ($errors->any())
+              <div class="custom-control custom-checkbox">
+                  <input name="tags[]" type="checkbox" class="custom-control-input" id="tag_{{$tag->id}}" value={{$tag->id}} {{in_array($tag->id, old('tags'))?'checked':''}}>
+                  <label class="custom-control-label" for="tag_{{$tag->id}}">{{$tag->name}}</label>
+              </div>
+          @else
+          <div class="form-check form-check-inline">
+            <input name="tags[]" class="form-check-input" type="checkbox" id="tag_{{$tag->id}}" value="{{$tag->id}}" {{$post->tags->contains($tag->id)? 'checked' : ''}} >
+            <label class="form-check-label" for="tag_{{$tag->id}}">{{$tag->name}}</label>
+          </div>
+          @endif
+        @endforeach
+        <div>
+          <button class="my-2 btn btn-success" type="submit">Edit</button>
+        </div>
       </form> 
     </div>
 @endsection

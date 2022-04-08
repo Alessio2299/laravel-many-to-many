@@ -11,6 +11,7 @@
                 <th scope="col">Description</th>
                 <th scope="col">Slug</th>
                 <th scope="col">Category</th>
+                <th scope="col">Tags</th>
                 <th scope="col">Action</th>
             </tr>
             </thead>
@@ -25,7 +26,12 @@
                             <td>Null</td>     
                         @else
                             <td>{{$post->category->name}}</td>     
-                        @endif                     
+                        @endif   
+                        <td>     
+                            @foreach ($post->tags as $tag)
+                                <span class="badge badge-primary">{{$tag->name}}</span>
+                            @endforeach     
+                        </td>                      
                         <td class="d-flex">
                             <a class="mr-2 btn btn-secondary" href="{{route('admin.posts.edit', $post->id)}}">Edit</a>
                             <a class="mr-2 btn btn-primary" href="{{route('admin.posts.show', $post->id)}}">Show</a>

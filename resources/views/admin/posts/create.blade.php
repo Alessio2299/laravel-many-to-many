@@ -26,7 +26,15 @@
           <label for="description">Description</label>
           <textarea type="text" class="form-control" name="description" placeholder="Add Description" rows="6"> {{old('description')}} </textarea>
         </div>
-        <button type="submit" class="btn btn-success" type="submit">Create</button>
+        @foreach ($tags as $tag)
+          <div class="form-check form-check-inline">
+            <input name="tags[]" class="form-check-input" type="checkbox" id="tag_{{$tag->id}}" value="{{$tag->id}}">
+            <label class="form-check-label" for="tag_{{$tag->id}}">{{$tag->name}}</label>
+          </div>
+        @endforeach
+        <div>
+          <button type="submit" class="my-2 btn btn-success" type="submit">Create</button>
+        </div>
       </form> 
     </div>
 @endsection
